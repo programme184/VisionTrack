@@ -66,5 +66,5 @@ class ImageCaptureSaver:
 
 
 if __name__ == "__main__":
-    saver = ImageCaptureSaver(save_dir="../../ImageData", max_images=5)
+    saver = ImageCaptureSaver(save_dir="../../ImageData", max_images=50)
     saver.spin()

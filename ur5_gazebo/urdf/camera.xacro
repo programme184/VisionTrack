@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+
+  <xacro:arg name="parent_link" default="base_link"/>
+  <xacro:arg name="use_gazebo_plugins" default="true"/>
+
+  <!-- Camera Link -->
+  <link name="rgbd_camera_link">
+    <visual>
+      <geometry>
+        <box size="0.05 0.05 0.05"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+  </link>
+
+  <!-- Fixed joint to attach camera to the robot -->
+  <joint name="rgbd_camera_joint" type="fixed">
+    <parent link="$(arg parent_link)"/>
+    <child link="rgbd_camera_link"/>
+    <origin xyz="0.3 0 1.2" rpy="0 0 0"/> <!-- Adjust position -->
+  </joint>
+
+  <!-- Gazebo plugin (only if enabled) -->
+  <xacro:if value="$(arg use_gazebo_plugins)">
+    <gazebo reference="rgbd_camera_link">
+      <sensor name="rgbd_camera" type="depth">
+        <always_on>true</always_on>
+        <update_rate>30.0</update_rate>
+        <camera name="rgbd_camera">
+          <horizontal_fov>1.047</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.05</near>
+            <far>5.0</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.007</stddev>
+          </noise>
+        </camera>
+        <plugin name="camera_controller" filename="libgazebo_ros_openni_kinect.so">
+          <camera_name>rgbd_camera</camera_name>
+          <image_topic_name>image_raw</image_topic_name>
+          <depth_image_topic_name>depth/image_raw</depth_image_topic_name>
+          <depth_image_camera_info_topic_name>depth/camera_info</depth_image_camera_info_topic_name>
+          <frame_name>rgbd_camera_link</frame_name>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:if>
+
+</robot>

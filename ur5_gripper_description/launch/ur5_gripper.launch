@@ -1,0 +1,13 @@
+<launch>
+  <!-- Load robot_description from xacro -->
+  <param name="robot_description" command="$(find xacro)/xacro '$(find ur5_gripper_sim)/urdf/ur5_with_gripper_display.xacro'" />
+
+  <!-- Publish joint states -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+
+  <!-- Publish transforms based on URDF -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  <!-- RViz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find ur5_gripper_sim)/rviz/urdf.rviz" required="true" />
+</launch>

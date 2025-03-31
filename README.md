@@ -26,6 +26,10 @@ roslaunch ur5_gripper_moveit ur5_moveit_planning_execution.launch
 
 > The simulation includes UR5 manipulator, Robotiq gripper, and a reachable RGB-D camera.
 
+**3. Run the control script** (Terminal c):
+```bash
+rosrun ur5_control pose_get.py
+```
 ## Features Implemented
 - Modified URDFs to combine UR5 and Robotiq gripper for both description and Gazebo
 - MoveIt configuration for UR5 with gripper

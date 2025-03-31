@@ -8,7 +8,8 @@ import os
 
 class CameraInfoReader:
     def __init__(self, camera_link_name='kinect_0::link'):
-        rospy.init_node('camera_info_reader', anonymous=True)
+        if not rospy.core.is_initialized():
+            rospy.init_node('camera_info_reader', anonymous=True)
 
         self.camera_info = None
         self.camera_pose = None

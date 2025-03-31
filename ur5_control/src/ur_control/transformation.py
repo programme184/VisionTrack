@@ -4,21 +4,19 @@ import os
 from scipy.spatial.transform import Rotation as R
 
 class CameraTransformer:
-    def __init__(self, config_path=None):
-        # Set default path if not provided
-        if config_path is None:
-            config_path = os.path.join(
-                os.path.dirname(__file__),
-                '/home/yfu/yolo_ws/src/ur5_gripper_sim/ur5_control/camera_config.json'
-            )
+    def __init__(self, intrinsics=None, pose=None, config_path=None):
+        # Load from file only if no intrinsics/pose provided
+        if intrinsics is None or pose is None:
+            if config_path is None:
+                config_path = os.path.join(
+                    os.path.dirname(__file__),
+                    '../camera_config.json'
+                )
             config_path = os.path.abspath(config_path)
-
-        # Load camera parameters from JSON
-        with open(config_path, 'r') as f:
-            config = json.load(f)
-
-        intrinsics = config['intrinsics']
-        pose = config['pose']
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+            intrinsics = config['intrinsics']
+            pose = config['pose']
 
         # Intrinsics
         self.fx = intrinsics['fx']
@@ -28,7 +26,7 @@ class CameraTransformer:
 
         # Camera pose in world frame
         self.camera_position = np.array(pose['position'])
-        self.camera_orientation = R.from_quat(pose['orientation'])  # x, y, z, w
+        self.camera_orientation = R.from_quat(pose['orientation'])  # [x, y, z, w]
 
     def pixel_to_3d_camera(self, x, y, depth):
         """Convert pixel to 3D point in the camera coordinate frame."""
@@ -44,7 +42,7 @@ class CameraTransformer:
         return point_world
 
 if __name__ == "__main__":
+    # Test standalone usage
     transformer = CameraTransformer()
     world_point = transformer.pixel_to_3d_world(320, 240, 1.0)
     print("3D World Coordinate:", world_point)
-
